@@ -6,12 +6,54 @@ namespace KTPO4317.Elushev.UnitTest.src.LogAn
     [TestFixture]
     public class LogAnalyzerTests
     {
+
         [TearDown]
         public void AfterEachTest()
         {
             ExtensionManagerFactory.SetManager(null);
+            WebServiceFactory.SetWebService(null);
+            EmailServiceFactory.SetEmailService(null);
         }
 
+        [Test]
+        public void Analyze_WebServiceThrows_SendsEmail()
+        {
+            //Подготовка теста
+            FakeWebService stubWebService = new FakeWebService();
+            WebServiceFactory.SetWebService(stubWebService);
+            stubWebService.WillThrow = new Exception("это подделка");
+
+            FakeEmailService mockEmail = new FakeEmailService();
+            EmailServiceFactory.SetEmailService(mockEmail);
+
+            LogAnalyzer log = new LogAnalyzer();
+            string tooShortFileName = "abc.ext";
+
+            //Воздействие на тестируемый объект
+            log.Analyze(tooShortFileName);
+
+            //Проверка ожидаемого результата
+            StringAssert.Contains("someone@somewhere.com", mockEmail.To);
+            StringAssert.Contains("это подделка", mockEmail.Body);
+            StringAssert.Contains("невозможно вызвать веб сервис", mockEmail.Subject);
+        }
+
+        [Test]
+        public void Analyze_TooShortFileName_CallsWebService()
+        {
+            //Подготовка теста
+            FakeWebService mockWebService = new FakeWebService();
+            WebServiceFactory.SetWebService(mockWebService);
+            LogAnalyzer log = new LogAnalyzer();
+            string tooShortFileName = "abc.ext";
+
+            //Воздействие на тестируемый объект
+            log.Analyze(tooShortFileName);
+
+            //Проверка ожидаемого результата
+            StringAssert.Contains("Слишком короткое имя файла: " + tooShortFileName, mockWebService.LastError);
+
+        }
         [Test]
         public void IsValidFileName_NameSupportedExtension_ReturnsTrue()
         {
@@ -36,7 +78,7 @@ namespace KTPO4317.Elushev.UnitTest.src.LogAn
             //Подготовка теста
             FakeExtensionManager fakeManager = new FakeExtensionManager();
             fakeManager.WillBeValid = false;
-            
+
             //..конфигурируем фабрику для создания поддельных объектов
             ExtensionManagerFactory.SetManager(fakeManager);
 
@@ -54,8 +96,8 @@ namespace KTPO4317.Elushev.UnitTest.src.LogAn
         {
             //Подготовка теста
             FakeExtensionManager fakeManager = new FakeExtensionManager();
-            fakeManager.WillBeValid = false;
-            
+            fakeManager.WillThrow = new Exception();
+
             //..конфигурируем фабрику для создания поддельных объектов
             ExtensionManagerFactory.SetManager(fakeManager);
 
@@ -84,9 +126,41 @@ namespace KTPO4317.Elushev.UnitTest.src.LogAn
         public bool IsValid(string fileName)
         {
             if (WillThrow != null)
-                throw WillThrow;
+            {
+                return false;
+            }
 
             return WillBeValid;
+        }
+    }
+
+    /// <summary> Поддельная веб - служба </summary>
+    internal class FakeWebService : IWebService
+    {
+        public string LastError;
+        public Exception WillThrow;
+
+        public void LogError(string message)
+        {
+            if (WillThrow != null)
+            {
+                throw WillThrow;
+            }
+            LastError = message;
+        }
+    }
+
+    public class FakeEmailService : IEmailService
+    {
+        public string To;
+        public string Subject;
+        public string Body;
+
+        public void SendEmail(string to, string subject, string body)
+        {
+            To = to;
+            Subject = subject;
+            Body = body;
         }
     }
 }
