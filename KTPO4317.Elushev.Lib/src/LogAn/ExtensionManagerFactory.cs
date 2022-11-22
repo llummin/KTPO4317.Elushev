@@ -4,7 +4,7 @@
 
     public static class ExtensionManagerFactory
     {
-        private static IExtensionManager? customManager = null;
+        private static IExtensionManager? customManager;
 
         /// <summary>Создание объектов</summary>
 

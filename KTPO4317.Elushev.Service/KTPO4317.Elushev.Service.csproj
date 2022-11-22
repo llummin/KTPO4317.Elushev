@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="NSubstitute" Version="4.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\KTPO4317.Elushev.Lib\KTPO4317.Elushev.Lib.csproj" />
     <ProjectReference Include="..\KTPO4317.Elushev.UnitTest\KTPO4317.Elushev.UnitTest.csproj" />
   </ItemGroup>

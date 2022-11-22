@@ -60,6 +60,7 @@ namespace KTPO4317.Elushev.UnitTest.src.LogAn
             //Подготовка теста
             FakeExtensionManager fakeManager = new FakeExtensionManager();
             fakeManager.WillBeValid = true;
+
             //..конфигурируем фабрику для создания поддельных объектов
             ExtensionManagerFactory.SetManager(fakeManager);
 
@@ -73,7 +74,7 @@ namespace KTPO4317.Elushev.UnitTest.src.LogAn
         }
 
         [Test]
-        public void IsValidFileName_NameSupportedExtension_ReturnsFalse()
+        public void IsValidFileName_NoneSupportedExtension_ReturnsFalse()
         {
             //Подготовка теста
             FakeExtensionManager fakeManager = new FakeExtensionManager();
@@ -101,10 +102,10 @@ namespace KTPO4317.Elushev.UnitTest.src.LogAn
             //..конфигурируем фабрику для создания поддельных объектов
             ExtensionManagerFactory.SetManager(fakeManager);
 
-            LogAnalyzer log = new LogAnalyzer();
+            ExtensionManagerFactory.SetManager(fakeManager);
 
-            //Воздействие на тестируемый объект
-            bool result = log.IsValidLogFileName("short.extension");
+            LogAnalyzer logAnalyzer = new LogAnalyzer();
+            bool result = logAnalyzer.IsValidLogFileName("short.ext");
 
             //Проверка ожидаемого результата
             Assert.False(result);

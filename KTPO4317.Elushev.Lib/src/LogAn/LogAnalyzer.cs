@@ -4,7 +4,15 @@
     {
         public bool IsValidLogFileName(string fileName)
         {
-            return ExtensionManagerFactory.Create().IsValid(fileName);
+            IExtensionManager mrg = ExtensionManagerFactory.Create();
+            try
+            {
+                return mrg.IsValid(fileName);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public void Analyze(string fileName)
