@@ -1,4 +1,6 @@
-﻿using KTPO4317.Elushev.Lib.src.LogAn;
+﻿using KTPO4317.Elushev.Lib.src.Common;
+using KTPO4317.Elushev.Lib.src.SampleCommands;
+using KTPO4317.Elushev.Service.src.WindsorInstallers;
 
 namespace KTPO4317.Elushev.Service
 {
@@ -6,23 +8,15 @@ namespace KTPO4317.Elushev.Service
     {
         static void Main()
         {
-            LogAnalyzer analyzer = new LogAnalyzer();
-            if (analyzer.IsValidLogFileName("ff.htm"))
-            {
-                Console.WriteLine("Файл ff.htm с правильным расширением");
-            }
-            else
-            {
-                Console.WriteLine("Файл ff.htm с неправильным расширением");
-            }
+            CastleFactory.container.Install(
+                new SampleCommandInstaller(),
+                new ViewInstaller()
+                );
 
-            if (analyzer.IsValidLogFileName("ff.html"))
+            for (int i = 0; i < 3; i++)
             {
-                Console.WriteLine("Файл ff.html с правильным расширением");
-            }
-            else
-            {
-                Console.WriteLine("Файл ff.html с неправильным расширением");
+                ISampleCommand sampleCommand = CastleFactory.container.Resolve<ISampleCommand>();
+                sampleCommand.Execute();
             }
         }
     }

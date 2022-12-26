@@ -1,11 +1,6 @@
 ﻿using KTPO4317.Elushev.Lib.src.LogAn;
 using NSubstitute;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace KTPO4317.Elushev.UnitTest.src.LogAn
 {
