@@ -1,8 +1,8 @@
-<h1 align="center">Software Test Design</h1>
+<h2 align="center">Тестирование программного обеспечения</h2>
 
-- ***Introduction to Offline Testing***
-- ***Using stubs to break dependencies*** 
-- ***Interaction testing and dummy objects*** 
-- ***The use of insulating frames*** 
-- ***Testing events*** 
-- ***Dependency injection using an IoC container*** 
+1. ***Введение в автономное тестирование***
+2. ***Использование заглушек для разрыва зависимостей*** 
+3. ***Тестирование взаимодействия и подставные объекты*** 
+4. ***Использование изолирующих каркасов*** 
+5. ***Тестирование событий*** 
+6. ***Внедрение зависимости с помощью IoC контейнера*** 
